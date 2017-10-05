@@ -2,19 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginLeft="8dp"
     android:layout_height="match_parent"
+    android:layout_marginLeft="8dp"
     android:orientation="vertical">
 
     <ListView
         android:id="@+id/messageListView"
-
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_above="@+id/linearLayout"
+        android:layout_height="250dp"
         android:divider="@android:color/transparent"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+        />
 
     <LinearLayout
         android:id="@+id/linearLayout"

@@ -1,6 +1,7 @@
 package com.example.khutsomatlala.hackaton_user11;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     public static Boolean stauts = false;
 
+    DetailActivity detailActivity = new DetailActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        Intent i = getIntent();
+
+        String ProcessLike = i.getStringExtra("mProcessLike");
+
+
+      //  Toast.makeText(this, " value from Detail " + ProcessLike, Toast.LENGTH_SHORT).show();
     }
+
+
+
 }
 
 

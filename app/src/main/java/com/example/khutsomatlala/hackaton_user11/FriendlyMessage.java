@@ -24,13 +24,33 @@ public class FriendlyMessage {
 
     private long messageTime;
 
+    //Like
+    private String like;
+    private int num;
+
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public String getLike() {
+        return like;
+    }
+
+    public void setLike(String like) {
+        this.like = like;
+    }
+
     public FriendlyMessage() {
     }
 
     public FriendlyMessage(String text, String name) {
         this.text = text;
         this.name = name;
-
         messageTime = new Date().getTime();
     }
 

@@ -7,13 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +34,15 @@ import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DetailActivity extends Activity {
+
+
+    //Like
+    private Boolean mProcessLike = false;
+    private DatabaseReference mDBLike;
+    private FirebaseAuth mAuth;
+    TextView tvLikes;
+    ImageButton mLikeButton;
+    int counter = 0;
 
 
 //        try {
@@ -73,8 +81,8 @@ public class DetailActivity extends Activity {
     private String mUsername;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference, mCommentsDatabaseReference;
-    private ValueEventListener mCommentEventListener,mPlaceEventListener;
+    private DatabaseReference mMessagesDatabaseReference, mCommentsDatabaseReference, mLikeDatabaseReference;
+
 
     List<FriendlyMessage> mComments;
     private FirebaseAuth mFirebaseAuth;
@@ -244,8 +252,8 @@ public class DetailActivity extends Activity {
 
                 String key = mCommentsDatabaseReference.push().getKey();
 
-              //  mCommentsDatabaseReference.child(place_uid).child(key).setValue(friendlyMessage);
-               mCommentsDatabaseReference.child(PlaceName).child(key).setValue(friendlyMessage);
+                //  mCommentsDatabaseReference.child(place_uid).child(key).setValue(friendlyMessage);
+                mCommentsDatabaseReference.child(PlaceName).child(key).setValue(friendlyMessage);
 
 
                 // Clear input box
@@ -253,9 +261,8 @@ public class DetailActivity extends Activity {
             }
         });
 
-       // mCommentsDatabaseReference.addValueEventListener(new ValueEventListener()
-        mCommentsDatabaseReference.child(PlaceName).addValueEventListener(new ValueEventListener()
-       {
+        // mCommentsDatabaseReference.addValueEventListener(new ValueEventListener()
+        mCommentsDatabaseReference.child(PlaceName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                progressDialog.dismiss();
@@ -283,8 +290,94 @@ public class DetailActivity extends Activity {
             }
         });
 
+        //Like
+        mDBLike = FirebaseDatabase.getInstance().getReference();
+        mDBLike.keepSynced(true);
 
+
+        tvLikes = (TextView) findViewById(R.id.numLikes);
+        mLikeButton = (ImageButton) findViewById(R.id.btnLike);
+        mAuth = FirebaseAuth.getInstance();
+
+        mLikeButton.setImageResource(R.drawable.thumbs);
+
+        mLikeButton.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View view) {
+
+                                               FriendlyMessage likes = new FriendlyMessage();
+
+                                               if (mProcessLike == false) {
+
+                                                   //likes.setLike("True");
+                                                   counter++;
+                                                   likes.setNum(counter);
+
+                                                   mDBLike.child("Likes").child(PlaceName).child(mAuth.getCurrentUser().getDisplayName()).setValue(likes);
+                                                   mProcessLike = true;
+
+                                                   mLikeButton.setImageResource(R.drawable.orange);
+
+                                               } else {
+
+//                    if (counter != 0) {
+//                        counter = counter - 1;
+//                    }
+                                                   // likes.setNum(counter);
+                                                   //likes.setLike("False");
+                                                   counter = 0;
+                                                   mDBLike.child("Likes").child(PlaceName).child(mAuth.getCurrentUser().getDisplayName()).removeValue();
+                                                   mProcessLike = false;
+
+                                                   mLikeButton.setImageResource(R.drawable.thumbs);
+
+
+                                                   //  Intent intent = new Intent(getContext(), max_pic.class);
+
+                                                   //  String pic = listImage.get(position).getUrI();
+
+                                                   //    intent.putExtra("pic",pic);
+
+                                                   //    context.startActivity(intent);
+
+                                               }
+
+                                               // Get a reference to our likes
+                                               final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                               DatabaseReference ref = database.getReference("Likes").child(PlaceName);
+
+                                               // Attach a listener to read the data at our likes reference
+                                               ref.addValueEventListener(new ValueEventListener() {
+                                                   @Override
+                                                   public void onDataChange(DataSnapshot dataSnapshot) {
+                                                       FriendlyMessage likes = dataSnapshot.getValue(FriendlyMessage.class);
+                                                       if (likes != null) {
+
+
+                                                           if (likes !=null) {
+
+                                                               Toast.makeText(DetailActivity.this, dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
+
+                                                           }
+
+
+                                                       }
+
+                                                   }
+
+                                                   @Override
+                                                   public void onCancelled(DatabaseError databaseError) {
+                                                       System.out.println("The read failed: " + databaseError.getCode());
+                                                   }
+                                               });
+
+                                               tvLikes.setText(Integer.toString(likes.getNum()));
+                                           }
+                                       }
+
+        );
     }
+
 
     public void Call(View view) {
 
@@ -309,6 +402,16 @@ public class DetailActivity extends Activity {
         startActivity(i);
     }
 
+    @Override
+    public void onBackPressed() {
+        // startActivity( new Intent(getApplicationContext(),book_new.class));
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        intent.putExtra("mProcessLike", mProcessLike);
+
+        startActivity(intent);
+    }
 
 }
 
