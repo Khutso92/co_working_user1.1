@@ -3,6 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="185dp"
@@ -32,7 +36,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
 
 
     <android.support.v4.widget.NestedScrollView
@@ -73,46 +76,11 @@
             </LinearLayout>
         </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <include layout="@layout/card_layout_details" />
 
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
                 <include layout="@layout/card_layout_call_dir_book" />
-            </LinearLayout>
-
-
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
                 <include layout="@layout/card_layout_comments" />
-
-                </ScrollView>
-            </LinearLayout>
-
-
-
-
-
-
-
-
-
 
         </LinearLayout>
 
@@ -120,5 +88,6 @@
     </android.support.v4.widget.NestedScrollView>
 
 
+</LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
