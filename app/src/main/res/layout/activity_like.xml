@@ -2,29 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
 
-   <ImageButton
+
+
+   <android.support.design.widget.FloatingActionButton
        android:id="@+id/btnLike"
        android:onClick="btnClicked"
-       android:layout_width="36dp"
-       android:layout_height="36dp"
-       android:background="@android:color/transparent"/>
+       android:layout_toRightOf="@+id/numLikes"
+       android:layout_marginLeft="5dp"
+       android:layout_width="50dp"
+       android:layout_height="50dp"/>
 
    <TextView
        android:id="@+id/numLikes"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_toRightOf="@+id/btnLike"
-       android:layout_marginLeft="10dp"
-       android:layout_marginTop="5dp"
+       android:layout_marginLeft="5dp"
+       android:layout_marginTop="10dp"
        android:fontFamily="sans-serif"
        android:textStyle="bold"
-       android:textSize="16dp"
+       android:textSize="20dp"
        android:text="0"/>
 </RelativeLayout>

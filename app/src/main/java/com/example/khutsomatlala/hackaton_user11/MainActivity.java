@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     public static Boolean stauts = false;
 
-    DetailActivity detailActivity = new DetailActivity();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +72,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Intent i = getIntent();
 
-        String ProcessLike = i.getStringExtra("mProcessLike");
-
-
-      //  Toast.makeText(this, " value from Detail " + ProcessLike, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -41,8 +42,11 @@ public class DetailActivity extends Activity {
     private DatabaseReference mDBLike;
     private FirebaseAuth mAuth;
     TextView tvLikes;
-    ImageButton mLikeButton;
+    //ImageButton mLikeButton;
+    FloatingActionButton mLikeButton;
     int counter = 0;
+
+    long totalLikes = 0;
 
 
 //        try {
@@ -82,7 +86,7 @@ public class DetailActivity extends Activity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference, mCommentsDatabaseReference, mLikeDatabaseReference;
-
+EditText message;
 
     List<FriendlyMessage> mComments;
     private FirebaseAuth mFirebaseAuth;
@@ -91,6 +95,11 @@ public class DetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        message =(EditText)findViewById(R.id.messageEditText);
+
+        message.clearFocus();
+
+        message.setFocusableInTouchMode(true);
 
         mComments = new ArrayList<>();
         Intent i = getIntent();
@@ -106,8 +115,7 @@ public class DetailActivity extends Activity {
 
 
         txtInformation = findViewById(R.id.txtInformation);
-        txtAddress = findViewById(R.id.txtAddress);
-        txtCell = findViewById(R.id.txtCell);
+
         txtHours = findViewById(R.id.txtHours);
 
         middlePic = findViewById(R.id.middlePic);
@@ -124,8 +132,7 @@ public class DetailActivity extends Activity {
 
 
         txtInformation.setText("Description - " + infor);
-        txtAddress.setText("Address - " + address);
-        txtCell.setText("Cell - " + call);
+
         txtHours.setText("operating hours - " + hours);
 
 
@@ -296,7 +303,7 @@ public class DetailActivity extends Activity {
 
 
         tvLikes = (TextView) findViewById(R.id.numLikes);
-        mLikeButton = (ImageButton) findViewById(R.id.btnLike);
+        mLikeButton = (FloatingActionButton) findViewById(R.id.btnLike);
         mAuth = FirebaseAuth.getInstance();
 
         mLikeButton.setImageResource(R.drawable.thumbs);
@@ -305,13 +312,12 @@ public class DetailActivity extends Activity {
                                            @Override
                                            public void onClick(View view) {
 
-                                               FriendlyMessage likes = new FriendlyMessage();
+                                               ImageUpload likes = new ImageUpload();
 
                                                if (mProcessLike == false) {
 
                                                    //likes.setLike("True");
-                                                   counter++;
-                                                   likes.setNum(counter);
+
 
                                                    mDBLike.child("Likes").child(PlaceName).child(mAuth.getCurrentUser().getDisplayName()).setValue(likes);
                                                    mProcessLike = true;
@@ -325,7 +331,8 @@ public class DetailActivity extends Activity {
 //                    }
                                                    // likes.setNum(counter);
                                                    //likes.setLike("False");
-                                                   counter = 0;
+//                                                   counter = 0;
+
                                                    mDBLike.child("Likes").child(PlaceName).child(mAuth.getCurrentUser().getDisplayName()).removeValue();
                                                    mProcessLike = false;
 
@@ -342,40 +349,45 @@ public class DetailActivity extends Activity {
 
                                                }
 
-                                               // Get a reference to our likes
-                                               final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                               DatabaseReference ref = database.getReference("Likes").child(PlaceName);
+                                               //comment
+//                                               // Get a reference to our likes
+//                                               final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                                               DatabaseReference ref = database.getReference("Likes").child(PlaceName);
+//
+//                                               // Attach a listener to read the data at our likes reference
+//                                               ref.addValueEventListener(new ValueEventListener() {
+//                                                   @Override
+//                                                   public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                       ImageUpload likes = dataSnapshot.getValue(ImageUpload.class);
+//                                                       if (likes != null) {
+//
+//                                                           totalLikes = dataSnapshot.getChildrenCount();
+//                                                           Toast.makeText(DetailActivity.this, totalLikes + "", Toast.LENGTH_SHORT).show();
+//                                                           tvLikes.setText(totalLikes + "");
+//
+//                                                       } else {
+//                                                           Toast.makeText(DetailActivity.this, " Number of  likes" + totalLikes, Toast.LENGTH_SHORT).show();
+//
+//                                                           tvLikes.setText(totalLikes + "");
+//                                                       }
+//
+//                                                   }
+//
+//                                                   @Override
+//                                                   public void onCancelled(DatabaseError databaseError) {
+//                                                       System.out.println("The read failed: " + databaseError.getCode());
+//                                                   }
+//                                               });
 
-                                               // Attach a listener to read the data at our likes reference
-                                               ref.addValueEventListener(new ValueEventListener() {
-                                                   @Override
-                                                   public void onDataChange(DataSnapshot dataSnapshot) {
-                                                       FriendlyMessage likes = dataSnapshot.getValue(FriendlyMessage.class);
-                                                       if (likes != null) {
 
-
-                                                           if (likes !=null) {
-
-                                                               Toast.makeText(DetailActivity.this, dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
-
-                                                           }
-
-
-                                                       }
-
-                                                   }
-
-                                                   @Override
-                                                   public void onCancelled(DatabaseError databaseError) {
-                                                       System.out.println("The read failed: " + databaseError.getCode());
-                                                   }
-                                               });
-
-                                               tvLikes.setText(Integer.toString(likes.getNum()));
+                                               totalLikes = 0;
                                            }
                                        }
 
         );
+
+
+        callLikes();
     }
 
 
@@ -402,16 +414,39 @@ public class DetailActivity extends Activity {
         startActivity(i);
     }
 
-    @Override
-    public void onBackPressed() {
-        // startActivity( new Intent(getApplicationContext(),book_new.class));
+public void callLikes(){
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+    // Get a reference to our likes
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference("Likes").child(PlaceName);
 
-        intent.putExtra("mProcessLike", mProcessLike);
+    // Attach a listener to read the data at our likes reference
+    ref.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            ImageUpload likes = dataSnapshot.getValue(ImageUpload.class);
+            if (likes != null) {
 
-        startActivity(intent);
-    }
+                totalLikes = dataSnapshot.getChildrenCount();
+//                Toast.makeText(DetailActivity.this, totalLikes + "", Toast.LENGTH_SHORT).show();
+                tvLikes.setText(totalLikes + "");
+
+            } else {
+//                Toast.makeText(DetailActivity.this, " Number of  likes" + totalLikes, Toast.LENGTH_SHORT).show();
+
+                tvLikes.setText(totalLikes + "");
+            }
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            System.out.println("The read failed: " + databaseError.getCode());
+        }
+    });
+
+
+}
 
 }
 

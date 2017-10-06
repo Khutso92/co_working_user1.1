@@ -45,12 +45,15 @@ public class imageListAdapter extends ArrayAdapter<ImageUpload> {
         //referencing item_list
         final ImageView img = view.findViewById(R.id.imgPlacePic);
         TextView txtPlaceName = view.findViewById(R.id.tvPlaceName);
-        //TextView txtPlaceFor = view.findViewById(R.id.tvPlaceInfor);
+        TextView txt = view.findViewById(R.id.tvLike);
         View ViewName = view.findViewById(R.id.ViewName);
+        TextView price = view.findViewById(R.id.tvPrice);
 
         //Assigning data
         txtPlaceName.setText(listImage.get(position).getPlaceName());
-        //  txtPlaceFor.setText(listImage.get(position).getPlaceInfo());
+        txt.setText(listImage.get(position).getPlaceWebsite());
+        price.setText(listImage.get(position).getPlaceAddress());
+
 
         Glide.with(context).load(listImage.get(position).getUrI()).into(img);
 
@@ -68,6 +71,8 @@ public class imageListAdapter extends ArrayAdapter<ImageUpload> {
                 String address = listImage.get(position).getPlaceAddress();
                 String hours = listImage.get(position).getPlaceHours();
                 String pic = listImage.get(position).getUrI();
+                String webside = listImage.get(position).getPlaceAddress();
+
 
                 intent.putExtra("lat", lat);
                 intent.putExtra("lon", lon);
