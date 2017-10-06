@@ -42,7 +42,7 @@ public class AuthActivity extends AppCompatActivity {
 
 //            User not logged in
             finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), Splash.class));
         }
 
 
@@ -114,7 +114,7 @@ public class AuthActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(),Splash.class));
                         }
 
                     }
